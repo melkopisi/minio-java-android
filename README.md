@@ -1,4 +1,4 @@
-# MinIO Java SDK for Amazon S3 Compatible Cloud Storage [![Slack](https://slack.min.io/slack?type=svg)](https://slack.min.io)
+# MinIO Java SDK with Android Support for Amazon S3 Compatible Cloud Storage
 
 MinIO Java SDK is Simple Storage Service (aka S3) client to perform bucket and object operations to any Amazon S3 compatible object storage service.
 
@@ -7,20 +7,36 @@ For a complete list of APIs and examples, please take a look at the [Java Client
 ## Minimum Requirements
 Java 1.8 or above.
 
-## Maven usage
-```xml
-<dependency>
-    <groupId>io.minio</groupId>
-    <artifactId>minio</artifactId>
-    <version>8.5.5</version>
-</dependency>
-```
-
 ## Gradle usage
 ```
 dependencies {
-    implementation("io.minio:minio:8.5.5")
+    implementation 'com.github.melkopisi:minio-java-android:8.5.5-android'
 }
+```
+
+## proguard rules
+```pro
+-keep class org.simpleframework.xml.** { *; }
+-keep class io.minio.** { *; }
+-dontwarn edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+-dontwarn java.beans.ConstructorProperties
+-dontwarn java.beans.Transient
+```
+
+## Bugs
+The download function not working in Android
+```kotlin
+minioClient.downloadObject(DownloadObjectArgs.Builder().build())
+```
+please download using DownloadManager or as multipart by creating presigned url
+
+```kotlin
+minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.GET).expiry(1, TimeUnit.HOURS).bucket(bucketName).`object`(item.origin).build() )
+```
+or by using getObject inputStream function
+
+```kotlin
+val inputStream : InputStream = minioClient.getObject(GetObjectArgs.builder().build())
 ```
 
 ## JAR download
